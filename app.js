@@ -2,7 +2,7 @@ require("dotenv").config();
 const Login = require("./Routes/Login.js");
 const express = require('express');
 const app = express();
-const port = 5000;
+const port = 3000;
 
 // Middleware to parse JSON and URL-encoded bodies
 app.use(express.json());
