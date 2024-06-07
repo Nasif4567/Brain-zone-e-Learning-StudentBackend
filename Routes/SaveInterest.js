@@ -1,37 +1,42 @@
 const connect = require('../Utils/Db.js');
+const {JWTGenerat,JWTVerify} = require("./jwt.js");
 
-async function SaveInterest(req,res){
-    try {
-    const { SelectedOptions } = req.body; // intest should be accepted as array 
-    const userID = 1; // hardcoded user name 
-    console.log(SelectedOptions);
+async function SaveInterest(req, res) {
+  let con;
+  let UserID;
 
-    // get the session and after login through that session it can be save in inside the interest field 
-    // The form session user ID can be retrived  
-    
-    if (SelectedOptions && SelectedOptions.length === 0) {
-        throw new Error('Add Interest so that we can recommend you courses');
-      }
+  try {
+    const { SelectedOptions } = req.body;
+    const token = req.cookies.token;
+    if (token){
+      UserID = JWTVerify(token)
+    }
 
-    const query = "INSERT INTO studentinterest(StudentID,interests) VALUES (?,?)";
 
-    const con = await connect();
-    const [result] = await con.promise().query(query, [userID,JSON.stringify(SelectedOptions)]);
+    if (!SelectedOptions || SelectedOptions.length === 0) {
+      return res.status(400).json({ error: 'Please add Interest so that we can recommend you courses' });
+    }
+
+    const query = "INSERT INTO studentinterest(StudentID, interests) VALUES (?,?)";
+
+    con = await connect();
+    const [result] = await con.promise().query(query, [UserID.UserID, JSON.stringify(SelectedOptions)]);
 
     // Check if the query was successful
     if (result.affectedRows > 0) {
-        res.status(201).json({ success: 'User interest saved ' });
-      } else {
-        res.status(500).json({ error: 'Failed to save user interest.' });
-      }
-     
-      con.end();
-
-    } catch (error) {
-        console.error('Error saving user interest:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+      res.status(201).json({ success: 'User interest saved ' });
+    } else {
+      res.status(500).json({ error: 'Failed to save user interest.' });
     }
 
+  } catch (error) {
+    console.error('Error saving user interest:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.end();
+    }
+  }
 }
 
-module.exports = SaveInterest
+module.exports = SaveInterest;
