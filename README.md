@@ -1,6 +1,6 @@
 Backend API for LMS (Brain zone Student System)
 Description
-This has been created using express.js and mysql. It is a backend API for a Learning Management System.
+This has been created using express.js and mysql. It is a backend API for a E-Learning Platform.
 
 Installation
 Clone the repository
