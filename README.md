@@ -1,4 +1,4 @@
-Backend API for Brain zone el e-learning Student System)
+Backend API for Brain zone e-learning Student System
 Description
 This has been created using express.js and mysql. It is a backend API for a E-Learning Platform.
 
